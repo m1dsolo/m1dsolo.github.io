@@ -39,12 +39,5 @@ GitHub Actions 会自动构建 Hugo 网站，并将生成的 HTML 文件推送�
 可以参考&lt;a href=&#34;https://github.com/adityatelange/hugo-PaperMod/wiki/Installation&#34;&gt;PaperMod 安装教程&lt;/a&gt;。&lt;/p&gt;
 &lt;p&gt;以下我列出使用 git submodule 方法（推荐）创建 PaperMod 主题的 Hugo 网站的命令：&lt;/p&gt;</description>
     </item>
-    <item>
-      <title>Hello World</title>
-      <link>http://m1dsolo.github.io/posts/hello-world/</link>
-      <pubDate>Mon, 13 Jan 2025 12:44:19 +0800</pubDate>
-      <guid>http://m1dsolo.github.io/posts/hello-world/</guid>
-      <description>&lt;p&gt;你好，世界！&lt;/p&gt;</description>
-    </item>
   </channel>
 </rss>
