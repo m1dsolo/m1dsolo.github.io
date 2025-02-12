@@ -2,22 +2,48 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Blog</title>
-    <link>http://m1dsolo.xyz/</link>
+    <link>http://m1dsolo.github.io/</link>
     <description>Recent content on Blog</description>
     <image>
       <title>Blog</title>
-      <url>http://m1dsolo.xyz/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
-      <link>http://m1dsolo.xyz/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
+      <url>http://m1dsolo.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
+      <link>http://m1dsolo.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
     </image>
-    <generator>Hugo -- 0.140.2</generator>
+    <generator>Hugo -- 0.143.1</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 13 Jan 2025 12:44:19 +0800</lastBuildDate>
-    <atom:link href="http://m1dsolo.xyz/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 12 Feb 2025 09:15:41 +0800</lastBuildDate>
+    <atom:link href="http://m1dsolo.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>使用 Hugo 搭建个人博客网站</title>
+      <link>http://m1dsolo.github.io/posts/hugo-deploy/</link>
+      <pubDate>Wed, 12 Feb 2025 09:15:41 +0800</pubDate>
+      <guid>http://m1dsolo.github.io/posts/hugo-deploy/</guid>
+      <description>&lt;h1 id=&#34;使用-hugo-搭建个人博客网站&#34;&gt;使用 Hugo 搭建个人博客网站&lt;/h1&gt;
+&lt;h2 id=&#34;1-前言&#34;&gt;1. 前言&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/gohugoio/hugo&#34;&gt;Hugo&lt;/a&gt;是一个用 Go 语言编写的静态网站生成器，
+它可以将 Markdown 文件转换为 HTML 文件，支持主题和插件，
+生成的网站可以直接部署到 GitHub Pages 、云服务器等。&lt;/p&gt;
+&lt;p&gt;本文将介绍如何使用 Hugo 搭建个人博客并使用 GitHub Actions 自动部署到 GitHub Pages 上。&lt;/p&gt;
+&lt;p&gt;实现的效果是，当我们将博客的 Markdown 文件推送到 GitHub 仓库时，
+GitHub Actions 会自动构建 Hugo 网站，并将生成的 HTML 文件推送到 GitHub Pages 上，
+这样我们就可以通过&lt;code&gt;https://&amp;lt;username&amp;gt;.github.io&lt;/code&gt;访问我们的博客。&lt;/p&gt;
+&lt;p&gt;以后有机会再介绍如何将 Hugo 部署到云服务器上。&lt;/p&gt;
+&lt;h2 id=&#34;2-安装-hugo&#34;&gt;2. 安装 Hugo&lt;/h2&gt;
+&lt;p&gt;具体安装方法可以参考&lt;a href=&#34;https://gohugo.io/getting-started/installing/&#34;&gt;Hugo 官方文档&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;以我使用的 Arch Linux 为例，可以通过以下命令安装 Hugo ：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo pacman -S hugo
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;3-创建-hugo-网站&#34;&gt;3. 创建 Hugo 网站&lt;/h2&gt;
+&lt;p&gt;初学者可以参考&lt;a href=&#34;https://gohugo.io/getting-started/quick-start/&#34;&gt;Hugo 官方教程&lt;/a&gt;。
+由于我使用的是&lt;a href=&#34;https://github.com/adityatelange/hugo-PaperMod&#34;&gt;PaperMod&lt;/a&gt;主题，
+如果你也想使用这个主题，
+可以参考&lt;a href=&#34;https://github.com/adityatelange/hugo-PaperMod/wiki/Installation&#34;&gt;PaperMod 安装教程&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;以下我列出使用 git submodule 方法（推荐）创建 PaperMod 主题的 Hugo 网站的命令：&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Hello World</title>
-      <link>http://m1dsolo.xyz/posts/hello-world/</link>
+      <link>http://m1dsolo.github.io/posts/hello-world/</link>
       <pubDate>Mon, 13 Jan 2025 12:44:19 +0800</pubDate>
-      <guid>http://m1dsolo.xyz/posts/hello-world/</guid>
+      <guid>http://m1dsolo.github.io/posts/hello-world/</guid>
       <description>&lt;p&gt;你好，世界！&lt;/p&gt;</description>
     </item>
   </channel>
