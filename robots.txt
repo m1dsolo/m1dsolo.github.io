@@ -1,3 +1,1 @@
 User-agent: *
-Disallow:
-Sitemap: http://m1dsolo.github.io/sitemap.xml
