@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>Hugo on Blog</title>
+    <title>Hugo on m1dsolo&#39;s blog</title>
     <link>http://m1dsolo.github.io/tags/hugo/</link>
-    <description>Recent content in Hugo on Blog</description>
+    <description>Recent content in Hugo on m1dsolo&#39;s blog</description>
     <image>
-      <title>Blog</title>
+      <title>m1dsolo&#39;s blog</title>
       <url>http://m1dsolo.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
       <link>http://m1dsolo.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
     </image>
@@ -14,10 +14,10 @@
     <lastBuildDate>Wed, 12 Feb 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://m1dsolo.github.io/tags/hugo/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>使用 Hugo 搭建个人博客网站并自动部署至 GitHub Pages</title>
-      <link>http://m1dsolo.github.io/posts/hugo-deploy/</link>
+      <title>使用 Hugo 搭建个人博客网站并自动部署至 GitHub Pages </title>
+      <link>http://m1dsolo.github.io/posts/hugo-blog/</link>
       <pubDate>Wed, 12 Feb 2025 00:00:00 +0000</pubDate>
-      <guid>http://m1dsolo.github.io/posts/hugo-deploy/</guid>
+      <guid>http://m1dsolo.github.io/posts/hugo-blog/</guid>
       <description>&lt;h2 id=&#34;1-前言&#34;&gt;1. 前言&lt;/h2&gt;
 &lt;p&gt;&lt;a href=&#34;https://github.com/gohugoio/hugo&#34;&gt;Hugo&lt;/a&gt;是一个用 Go 语言编写的静态网站生成器，
 它可以将 Markdown 文件转换为 HTML 文件，支持主题和插件，
@@ -26,7 +26,7 @@
 &lt;p&gt;实现的效果是，当我们将博客的 Markdown 文件推送到 GitHub 仓库时，
 GitHub Actions 会自动构建 Hugo 网站，并将生成的 HTML 文件推送到 GitHub Pages 上，
 这样我们就可以通过&lt;code&gt;https://&amp;lt;username&amp;gt;.github.io&lt;/code&gt;访问我们的博客。&lt;/p&gt;
-&lt;p&gt;以后有机会再介绍如何将 Hugo 部署到云服务器上。&lt;/p&gt;
+&lt;p&gt;后面会大致介绍下如何将 Hugo 部署到云服务器上，没有特殊需求不建议折腾。&lt;/p&gt;
 &lt;h2 id=&#34;2-安装-hugo&#34;&gt;2. 安装 Hugo&lt;/h2&gt;
 &lt;p&gt;具体安装方法可以参考&lt;a href=&#34;https://gohugo.io/getting-started/installing&#34;&gt;Hugo 官方文档&lt;/a&gt;。&lt;/p&gt;
 &lt;p&gt;以我使用的 Arch Linux 为例，可以通过以下命令安装 Hugo ：&lt;/p&gt;
