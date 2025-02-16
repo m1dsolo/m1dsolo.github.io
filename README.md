@@ -1,2 +1,0 @@
-- This project is produced by [blog](https://github.com/m1dsolo/blog) through Github Action.
-- Mainland China users are recommended to visit [m1dsolo.xyz](https://m1dsolo.xyz).
