@@ -19,7 +19,7 @@
       <pubDate>Wed, 12 Feb 2025 00:00:00 +0000</pubDate>
       <guid>https://m1dsolo.github.io/posts/hugo-blog/</guid>
       <description>&lt;h2 id=&#34;1-前言&#34;&gt;1. 前言&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&#34;https://github.com/gohugoio/hugo&#34;&gt;Hugo&lt;/a&gt;是一个用 Go 语言编写的静态网站生成器，
+&lt;p&gt;&lt;a href=&#34;https://github.com/gohugoio/hugo&#34;&gt;Hugo&lt;/a&gt; 是一个用 Go 语言编写的静态网站生成器，
 它可以将 Markdown 文件转换为 HTML 文件，支持主题和插件，
 生成的网站可以直接部署到 GitHub Pages 、云服务器等。&lt;/p&gt;
 &lt;p&gt;本文将介绍如何使用 Hugo 搭建个人博客并使用 GitHub Actions 自动部署到 GitHub Pages 上。&lt;/p&gt;
@@ -28,14 +28,14 @@ GitHub Actions 会自动构建 Hugo 网站，并将生成的 HTML 文件推送�
 这样我们就可以通过&lt;code&gt;https://&amp;lt;username&amp;gt;.github.io&lt;/code&gt;访问我们的博客。&lt;/p&gt;
 &lt;p&gt;后面会大致介绍下如何将 Hugo 部署到云服务器上，没有特殊需求不建议折腾。&lt;/p&gt;
 &lt;h2 id=&#34;2-安装-hugo&#34;&gt;2. 安装 Hugo&lt;/h2&gt;
-&lt;p&gt;具体安装方法可以参考&lt;a href=&#34;https://gohugo.io/getting-started/installing&#34;&gt;Hugo 官方文档&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;具体安装方法可以参考 &lt;a href=&#34;https://gohugo.io/getting-started/installing&#34;&gt;Hugo 官方文档&lt;/a&gt; 。&lt;/p&gt;
 &lt;p&gt;以我使用的 Arch Linux 为例，可以通过以下命令安装 Hugo ：&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo pacman -S hugo
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;3-创建-hugo-网站&#34;&gt;3. 创建 Hugo 网站&lt;/h2&gt;
-&lt;p&gt;初学者可以参考&lt;a href=&#34;https://gohugo.io/getting-started/quick-start&#34;&gt;Hugo 官方教程&lt;/a&gt;。
-由于我使用的是&lt;a href=&#34;https://github.com/adityatelange/hugo-PaperMod&#34;&gt;PaperMod&lt;/a&gt;主题，
+&lt;p&gt;初学者可以参考 &lt;a href=&#34;https://gohugo.io/getting-started/quick-start&#34;&gt;Hugo 官方教程&lt;/a&gt; 。
+由于我使用的是 &lt;a href=&#34;https://github.com/adityatelange/hugo-PaperMod&#34;&gt;PaperMod&lt;/a&gt; 主题，
 如果你也想使用这个主题，
-可以参考&lt;a href=&#34;https://github.com/adityatelange/hugo-PaperMod/wiki/Installation&#34;&gt;PaperMod 安装教程&lt;/a&gt;。&lt;/p&gt;
+可以参考 &lt;a href=&#34;https://github.com/adityatelange/hugo-PaperMod/wiki/Installation&#34;&gt;PaperMod 安装教程&lt;/a&gt; 。&lt;/p&gt;
 &lt;p&gt;以下我列出使用 git submodule 方法（推荐）创建 PaperMod 主题的 Hugo 网站的命令：&lt;/p&gt;</description>
     </item>
   </channel>
