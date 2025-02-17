@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>文章 on m1dsolo&#39;s blog</title>
-    <link>https://m1dsolo.github.io/zh-cn/posts/</link>
-    <description>Recent content in 文章 on m1dsolo&#39;s blog</description>
+    <title>Hugo on m1dsolo&#39;s blog</title>
+    <link>https://m1dsolo.github.io/tags/hugo/</link>
+    <description>Recent content in Hugo on m1dsolo&#39;s blog</description>
     <image>
       <title>m1dsolo&#39;s blog</title>
       <url>https://m1dsolo.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
@@ -12,12 +12,12 @@
     <generator>Hugo -- 0.143.1</generator>
     <language>zh-CN</language>
     <lastBuildDate>Wed, 12 Feb 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://m1dsolo.github.io/zh-cn/posts/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://m1dsolo.github.io/tags/hugo/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>使用 Hugo 搭建个人博客网站并自动部署至 GitHub Pages </title>
-      <link>https://m1dsolo.github.io/zh-cn/posts/hugo-blog/</link>
+      <link>https://m1dsolo.github.io/posts/hugo-blog/</link>
       <pubDate>Wed, 12 Feb 2025 00:00:00 +0000</pubDate>
-      <guid>https://m1dsolo.github.io/zh-cn/posts/hugo-blog/</guid>
+      <guid>https://m1dsolo.github.io/posts/hugo-blog/</guid>
       <description>&lt;h2 id=&#34;1-前言&#34;&gt;1. 前言&lt;/h2&gt;
 &lt;p&gt;&lt;a href=&#34;https://github.com/gohugoio/hugo&#34;&gt;Hugo&lt;/a&gt;是一个用 Go 语言编写的静态网站生成器，
 它可以将 Markdown 文件转换为 HTML 文件，支持主题和插件，

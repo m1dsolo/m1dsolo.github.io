@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>标签 on m1dsolo&#39;s blog</title>
-    <link>https://m1dsolo.github.io/zh-cn/tags/</link>
+    <link>https://m1dsolo.github.io/tags/</link>
     <description>Recent content in 标签 on m1dsolo&#39;s blog</description>
     <image>
       <title>m1dsolo&#39;s blog</title>
@@ -12,12 +12,12 @@
     <generator>Hugo -- 0.143.1</generator>
     <language>zh-CN</language>
     <lastBuildDate>Wed, 12 Feb 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://m1dsolo.github.io/zh-cn/tags/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://m1dsolo.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Hugo</title>
-      <link>https://m1dsolo.github.io/zh-cn/tags/hugo/</link>
+      <link>https://m1dsolo.github.io/tags/hugo/</link>
       <pubDate>Wed, 12 Feb 2025 00:00:00 +0000</pubDate>
-      <guid>https://m1dsolo.github.io/zh-cn/tags/hugo/</guid>
+      <guid>https://m1dsolo.github.io/tags/hugo/</guid>
       <description></description>
     </item>
   </channel>
