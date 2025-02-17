@@ -9,7 +9,7 @@
 因为我们需要进行进程间通信（终端和 DWM 之间）， 所以我们选择最简单的进程间通信方式：文件。
 在 DWM 的dwm.c中的swallow函数开始处，我们添加一个if语句：
 void swallow(Client *p, Client *c) { if (c->noswallow || c->isterminal) return; if (c->noswallow && !swallowfloating && c->isfloating) return; // add this to your code if (!access("/tmp/noswallow", F_OK)) return; access("/tmp/noswallow", F_OK)会检查/tmp/noswallow是否存在，如果存在则返回 0 ，否则返回-1 。
-...</p></div><footer class=entry-footer><span title='2025-02-17 00:00:00 +0000 UTC'>2025-2-17</span>&nbsp;·&nbsp;114 words</footer><a class=entry-link aria-label="post link to 在 DWM 中防止特定窗口被 swallow 的方法" href=https://m1dsolo.github.io/posts/dwm-noswallow/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>使用 Hugo 搭建个人博客网站并自动部署至 GitHub Pages</h2></header><div class=entry-content><p>1. 前言 Hugo是一个用 Go 语言编写的静态网站生成器， 它可以将 Markdown 文件转换为 HTML 文件，支持主题和插件， 生成的网站可以直接部署到 GitHub Pages 、云服务器等。
+...</p></div><footer class=entry-footer><span title='2025-02-17 00:00:00 +0000 UTC'>2025-2-17</span>&nbsp;·&nbsp;119 words</footer><a class=entry-link aria-label="post link to 在 DWM 中防止特定窗口被 swallow 的方法" href=https://m1dsolo.github.io/posts/dwm-noswallow/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>使用 Hugo 搭建个人博客网站并自动部署至 GitHub Pages</h2></header><div class=entry-content><p>1. 前言 Hugo是一个用 Go 语言编写的静态网站生成器， 它可以将 Markdown 文件转换为 HTML 文件，支持主题和插件， 生成的网站可以直接部署到 GitHub Pages 、云服务器等。
 本文将介绍如何使用 Hugo 搭建个人博客并使用 GitHub Actions 自动部署到 GitHub Pages 上。
 实现的效果是，当我们将博客的 Markdown 文件推送到 GitHub 仓库时， GitHub Actions 会自动构建 Hugo 网站，并将生成的 HTML 文件推送到 GitHub Pages 上， 这样我们就可以通过https://&lt;username>.github.io访问我们的博客。
 后面会大致介绍下如何将 Hugo 部署到云服务器上，没有特殊需求不建议折腾。
