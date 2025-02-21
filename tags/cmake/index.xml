@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>文章 on m1dsolo&#39;s blog</title>
-    <link>https://m1dsolo.github.io/posts/</link>
-    <description>Recent content in 文章 on m1dsolo&#39;s blog</description>
+    <title>CMake on m1dsolo&#39;s blog</title>
+    <link>https://m1dsolo.github.io/tags/cmake/</link>
+    <description>Recent content in CMake on m1dsolo&#39;s blog</description>
     <image>
       <title>m1dsolo&#39;s blog</title>
       <url>https://m1dsolo.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
@@ -12,7 +12,7 @@
     <generator>Hugo -- 0.144.2</generator>
     <language>zh-CN</language>
     <lastBuildDate>Fri, 21 Feb 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://m1dsolo.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://m1dsolo.github.io/tags/cmake/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>在 C&#43;&#43; 中使用 CMake 构建专属于自己的轮子库</title>
       <link>https://m1dsolo.github.io/posts/cpp-wheel/</link>
@@ -179,72 +179,6 @@
 &lt;/svg&gt;
 
         &lt;/span&gt;信息&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>在 dwm 中防止特定窗口被 swallow 的方法</title>
-      <link>https://m1dsolo.github.io/posts/dwm-noswallow/</link>
-      <pubDate>Mon, 17 Feb 2025 00:00:00 +0000</pubDate>
-      <guid>https://m1dsolo.github.io/posts/dwm-noswallow/</guid>
-      <description>&lt;h2 id=&#34;1-前言&#34;&gt;1. 前言&lt;/h2&gt;
-&lt;p&gt;dwm 是 X11 下的平铺式窗口管理器，它是用 C 语言编写的，非常轻量级，全部代码也才不到 2k 行。
-它提供了一些基本的窗口管理功能，对于额外的功能，可以通过修改源码来实现。
-目前 &lt;a href=&#34;https://dwm.suckless.org/patches/&#34;&gt;suckless 官网&lt;/a&gt; 上提供了非常多的补丁，可以用来扩展 dwm 的功能。&lt;/p&gt;
-&lt;p&gt;其中一个很重要的补丁就是 &lt;a href=&#34;https://dwm.suckless.org/patches/swallow/&#34;&gt;swallow&lt;/a&gt; ，
-它可以让 dwm 在启动一个新的应用程序时，将其嵌入到一个已有的窗口中，而不是启动一个新的窗口。
-这样可以大幅度减少多余窗口的数量。&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;swallow&#34; loading=&#34;lazy&#34; src=&#34;https://m1dsolo.xyz/images/dwm-noswallow/swallow.gif&#34;&gt;&lt;/p&gt;
-&lt;p&gt;详细信息可以参考 &lt;a href=&#34;https://www.youtube.com/watch?v=92uo5OBOKfY&amp;amp;t=327s&#34;&gt;Luke Smith 的视频&lt;/a&gt; 。&lt;/p&gt;
-&lt;h2 id=&#34;2-需求分析&#34;&gt;2. 需求分析&lt;/h2&gt;
-&lt;p&gt;swallow 固然很好，但是有时候我们并不希望所有的窗口都 swallow 终端窗口，
-比如有时候我在开发游戏过程中，我希望可以看到终端窗口的输出来进行 debug ，这时 swallow 补丁就无法满足我的需求了。&lt;/p&gt;
-&lt;p&gt;我尝试过其他方式，比如使用 &lt;a href=&#34;https://dwm.suckless.org/patches/dynamicswallow/&#34;&gt;dynamicswallow patch&lt;/a&gt; ，
-但是这个 patch 过于重量级，提供了太多不必要的功能。
-所以我决定在 swallow patch 的基础上进行修改，实现只有特定窗口才会被 swallow 的功能。&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;noswallow&#34; loading=&#34;lazy&#34; src=&#34;https://m1dsolo.xyz/images/dwm-noswallow/noswallow.gif&#34;&gt;&lt;/p&gt;
-&lt;p&gt;上面演示了&lt;code&gt;noswallow&lt;/code&gt;的效果：
-通过在执行命令前加上&lt;code&gt;noswallow&lt;/code&gt;脚本，
-比如&lt;code&gt;noswallow ./your_app&lt;/code&gt;，就可以防止&lt;code&gt;your_app&lt;/code&gt;被 swallow 。&lt;/p&gt;
-&lt;h2 id=&#34;3-实现原理&#34;&gt;3. 实现原理&lt;/h2&gt;
-&lt;p&gt;实现过程非常简单：&lt;/p&gt;
-&lt;p&gt;因为我们需要进行进程间通信（终端和 dwm 之间），
-所以我们选择最简单的进程间通信方式：文件。&lt;/p&gt;
-&lt;p&gt;在 dwm 的&lt;code&gt;dwm.c&lt;/code&gt;中的&lt;code&gt;swallow&lt;/code&gt;函数开始处，我们添加一个&lt;code&gt;if&lt;/code&gt;语句：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nf&#34;&gt;swallow&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Client&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;p&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Client&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;noswallow&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;||&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;isterminal&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;noswallow&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;!&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;swallowfloating&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;isfloating&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;c1&#34;&gt;// add this to your code
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;!&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;access&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;/tmp/noswallow&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;F_OK&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;access(&amp;quot;/tmp/noswallow&amp;quot;, F_OK)&lt;/code&gt;会检查&lt;code&gt;/tmp/noswallow&lt;/code&gt;是否存在，如果存在则返回 0 ，否则返回-1 。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>使用 Hugo 搭建个人博客网站并自动部署至 GitHub Pages </title>
-      <link>https://m1dsolo.github.io/posts/hugo-blog/</link>
-      <pubDate>Wed, 12 Feb 2025 00:00:00 +0000</pubDate>
-      <guid>https://m1dsolo.github.io/posts/hugo-blog/</guid>
-      <description>&lt;h2 id=&#34;1-前言&#34;&gt;1. 前言&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&#34;https://github.com/gohugoio/hugo&#34;&gt;Hugo&lt;/a&gt; 是一个用 Go 语言编写的静态网站生成器，
-它可以将 Markdown 文件转换为 HTML 文件，支持主题和插件，
-生成的网站可以直接部署到 GitHub Pages 、云服务器等。&lt;/p&gt;
-&lt;p&gt;本文将介绍如何使用 Hugo 搭建个人博客并使用 GitHub Actions 自动部署到 GitHub Pages 上。&lt;/p&gt;
-&lt;p&gt;实现的效果是，当我们将博客的 Markdown 文件推送到 GitHub 仓库时，
-GitHub Actions 会自动构建 Hugo 网站，并将生成的 HTML 文件推送到 GitHub Pages 上，
-这样我们就可以通过&lt;code&gt;https://&amp;lt;username&amp;gt;.github.io&lt;/code&gt;访问我们的博客。&lt;/p&gt;
-&lt;p&gt;后面会大致介绍下如何将 Hugo 部署到云服务器上，没有特殊需求不建议折腾。&lt;/p&gt;
-&lt;h2 id=&#34;2-安装-hugo&#34;&gt;2. 安装 Hugo&lt;/h2&gt;
-&lt;p&gt;具体安装方法可以参考 &lt;a href=&#34;https://gohugo.io/getting-started/installing&#34;&gt;Hugo 官方文档&lt;/a&gt; 。&lt;/p&gt;
-&lt;p&gt;以我使用的 Arch Linux 为例，可以通过以下命令安装 Hugo ：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo pacman -S hugo
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;3-创建-hugo-网站&#34;&gt;3. 创建 Hugo 网站&lt;/h2&gt;
-&lt;p&gt;初学者可以参考 &lt;a href=&#34;https://gohugo.io/getting-started/quick-start&#34;&gt;Hugo 官方教程&lt;/a&gt; 。
-由于我使用的是 &lt;a href=&#34;https://github.com/adityatelange/hugo-PaperMod&#34;&gt;PaperMod&lt;/a&gt; 主题，
-如果你也想使用这个主题，
-可以参考 &lt;a href=&#34;https://github.com/adityatelange/hugo-PaperMod/wiki/Installation&#34;&gt;PaperMod 安装教程&lt;/a&gt; 。&lt;/p&gt;
-&lt;p&gt;以下我列出使用 git submodule 方法（推荐）创建 PaperMod 主题的 Hugo 网站的命令：&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

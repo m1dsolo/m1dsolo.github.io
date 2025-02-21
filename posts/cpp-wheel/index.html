@@ -1,0 +1,264 @@
+<!doctype html><html lang=zh-cn dir=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>在 C++ 中使用 CMake 构建专属于自己的轮子库 | m1dsolo's blog</title>
+<meta name=keywords content="C++,CMake,GoogleTest"><meta name=description content="1. 前言
+掌握一门编程语言的关键之一就是多动手写代码。
+当我不知道该写什么代码时，通常会选择造轮子。
+造轮子的过程中不仅能让我更加熟悉语言的特性，还能让我深入思考这些轮子的底层实现原理。
+同时，造好的轮子也可以用于以后的项目中，从而提高开发效率。
+C++ 是一门非常适合造轮子的语言，搭配上 CMake 这个构建工具，可以轻松构建出一个专属于自己的轮子库。
+这样在以后的项目中，只需要引入这个库，就可以使用自己造的轮子了。
+例如，当我曾经实现了一个线程池，未来如果要使用它，
+只需要 include 我的 wheel 库：
+#include <wheel/thread_pool.hpp>
+
+int main() {
+    wheel::ThreadPool thread_pool(4);
+
+    ...
+}
+本文将会用一个简单的例子来介绍如何使用 C++ 和 CMake 来构建一个专属于自己的轮子库。
+2. 例子介绍
+本文的目标是实现一个加法器，输入两个整数，加法器会输出它们的和。
+这个加法器用到了wheel库中的math.hpp文件里面的add函数。
+3. 构建轮子库
+首先来看一下最终的 wheel 库目录结构：
+wheel
+├── CMakeLists.txt
+├── include
+│   └── wheel
+│       └── math.hpp
+└── src
+    └── math.cpp
+约定include/wheel内存的头文件是对外公开的接口，src内存源文件（也可以存私有头文件），test内存的测试文件。
+接下来我们分别来看一下这几个文件的内容。
+include/wheel/math.hpp定义要暴露的接口：
+#pragma once
+
+namespace wheel {
+
+int add(int a, int b);
+
+}  // namespace wheel
+
+    
+        
+            
+  
+
+
+        信息"><meta name=author content="m1dsolo"><link rel=canonical href=https://m1dsolo.github.io/posts/cpp-wheel/><meta name=google-site-verification content="XYZabc"><meta name=yandex-verification content="XYZabc"><meta name=msvalidate.01 content="XYZabc"><link crossorigin=anonymous href=/assets/css/stylesheet.45e028aa8ce0961349adf411b013ee39406be2c0bc80d4ea3fc04555f7f4611a.css integrity="sha256-ReAoqozglhNJrfQRsBPuOUBr4sC8gNTqP8BFVff0YRo=" rel="preload stylesheet" as=style><link rel=icon href=https://m1dsolo.github.io/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://m1dsolo.github.io/favicon.ico><link rel=icon type=image/png sizes=32x32 href=https://m1dsolo.github.io/favicon.ico><link rel=apple-touch-icon href=https://m1dsolo.github.io/favicon.ico><link rel=mask-icon href=https://m1dsolo.github.io/favicon.ico><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=zh-cn href=https://m1dsolo.github.io/posts/cpp-wheel/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><script async data-api=https://m1dsolo.xyz/api src=https://m1dsolo.xyz/js></script><script async src="https://www.googletagmanager.com/gtag/js?id=G-3G6QXPCTL9"></script><script>var dnt,doNotTrack=!1;if(!1&&(dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes"),!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-3G6QXPCTL9")}</script><meta name=baidu-site-verification content="codeva-SY7YdHe2RN"><script async src="https://www.googletagmanager.com/gtag/js?id=G-3G6QXPCTL9"></script><script>var dnt,doNotTrack=!1;if(!1&&(dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes"),!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-3G6QXPCTL9")}</script><meta property="og:url" content="https://m1dsolo.github.io/posts/cpp-wheel/"><meta property="og:site_name" content="m1dsolo's blog"><meta property="og:title" content="在 C++ 中使用 CMake 构建专属于自己的轮子库"><meta property="og:description" content="1. 前言 掌握一门编程语言的关键之一就是多动手写代码。 当我不知道该写什么代码时，通常会选择造轮子。 造轮子的过程中不仅能让我更加熟悉语言的特性，还能让我深入思考这些轮子的底层实现原理。 同时，造好的轮子也可以用于以后的项目中，从而提高开发效率。
+C++ 是一门非常适合造轮子的语言，搭配上 CMake 这个构建工具，可以轻松构建出一个专属于自己的轮子库。 这样在以后的项目中，只需要引入这个库，就可以使用自己造的轮子了。
+例如，当我曾经实现了一个线程池，未来如果要使用它， 只需要 include 我的 wheel 库：
+#include <wheel/thread_pool.hpp> int main() { wheel::ThreadPool thread_pool(4); ... } 本文将会用一个简单的例子来介绍如何使用 C++ 和 CMake 来构建一个专属于自己的轮子库。
+2. 例子介绍 本文的目标是实现一个加法器，输入两个整数，加法器会输出它们的和。 这个加法器用到了wheel库中的math.hpp文件里面的add函数。
+3. 构建轮子库 首先来看一下最终的 wheel 库目录结构：
+wheel ├── CMakeLists.txt ├── include │ └── wheel │ └── math.hpp └── src └── math.cpp 约定include/wheel内存的头文件是对外公开的接口，src内存源文件（也可以存私有头文件），test内存的测试文件。
+接下来我们分别来看一下这几个文件的内容。
+include/wheel/math.hpp定义要暴露的接口：
+#pragma once namespace wheel { int add(int a, int b); } // namespace wheel 信息"><meta property="og:locale" content="zh-CN"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2025-02-21T00:00:00+00:00"><meta property="article:modified_time" content="2025-02-21T00:00:00+00:00"><meta property="article:tag" content="C++"><meta property="article:tag" content="CMake"><meta property="og:image" content="https://m1dsolo.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://m1dsolo.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E"><meta name=twitter:title content="在 C++ 中使用 CMake 构建专属于自己的轮子库"><meta name=twitter:description content="1. 前言
+掌握一门编程语言的关键之一就是多动手写代码。
+当我不知道该写什么代码时，通常会选择造轮子。
+造轮子的过程中不仅能让我更加熟悉语言的特性，还能让我深入思考这些轮子的底层实现原理。
+同时，造好的轮子也可以用于以后的项目中，从而提高开发效率。
+C++ 是一门非常适合造轮子的语言，搭配上 CMake 这个构建工具，可以轻松构建出一个专属于自己的轮子库。
+这样在以后的项目中，只需要引入这个库，就可以使用自己造的轮子了。
+例如，当我曾经实现了一个线程池，未来如果要使用它，
+只需要 include 我的 wheel 库：
+#include <wheel/thread_pool.hpp>
+
+int main() {
+    wheel::ThreadPool thread_pool(4);
+
+    ...
+}
+本文将会用一个简单的例子来介绍如何使用 C++ 和 CMake 来构建一个专属于自己的轮子库。
+2. 例子介绍
+本文的目标是实现一个加法器，输入两个整数，加法器会输出它们的和。
+这个加法器用到了wheel库中的math.hpp文件里面的add函数。
+3. 构建轮子库
+首先来看一下最终的 wheel 库目录结构：
+wheel
+├── CMakeLists.txt
+├── include
+│   └── wheel
+│       └── math.hpp
+└── src
+    └── math.cpp
+约定include/wheel内存的头文件是对外公开的接口，src内存源文件（也可以存私有头文件），test内存的测试文件。
+接下来我们分别来看一下这几个文件的内容。
+include/wheel/math.hpp定义要暴露的接口：
+#pragma once
+
+namespace wheel {
+
+int add(int a, int b);
+
+}  // namespace wheel
+
+    
+        
+            
+  
+
+
+        信息"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"文章","item":"https://m1dsolo.github.io/posts/"},{"@type":"ListItem","position":2,"name":"在 C++ 中使用 CMake 构建专属于自己的轮子库","item":"https://m1dsolo.github.io/posts/cpp-wheel/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"在 C++ 中使用 CMake 构建专属于自己的轮子库","name":"在 C\u002b\u002b 中使用 CMake 构建专属于自己的轮子库","description":"1. 前言 掌握一门编程语言的关键之一就是多动手写代码。 当我不知道该写什么代码时，通常会选择造轮子。 造轮子的过程中不仅能让我更加熟悉语言的特性，还能让我深入思考这些轮子的底层实现原理。 同时，造好的轮子也可以用于以后的项目中，从而提高开发效率。\nC++ 是一门非常适合造轮子的语言，搭配上 CMake 这个构建工具，可以轻松构建出一个专属于自己的轮子库。 这样在以后的项目中，只需要引入这个库，就可以使用自己造的轮子了。\n例如，当我曾经实现了一个线程池，未来如果要使用它， 只需要 include 我的 wheel 库：\n#include \u0026lt;wheel/thread_pool.hpp\u0026gt; int main() { wheel::ThreadPool thread_pool(4); ... } 本文将会用一个简单的例子来介绍如何使用 C++ 和 CMake 来构建一个专属于自己的轮子库。\n2. 例子介绍 本文的目标是实现一个加法器，输入两个整数，加法器会输出它们的和。 这个加法器用到了wheel库中的math.hpp文件里面的add函数。\n3. 构建轮子库 首先来看一下最终的 wheel 库目录结构：\nwheel ├── CMakeLists.txt ├── include │ └── wheel │ └── math.hpp └── src └── math.cpp 约定include/wheel内存的头文件是对外公开的接口，src内存源文件（也可以存私有头文件），test内存的测试文件。\n接下来我们分别来看一下这几个文件的内容。\ninclude/wheel/math.hpp定义要暴露的接口：\n#pragma once namespace wheel { int add(int a, int b); } // namespace wheel 信息\n","keywords":["C++","CMake","GoogleTest"],"articleBody":"1. 前言 掌握一门编程语言的关键之一就是多动手写代码。 当我不知道该写什么代码时，通常会选择造轮子。 造轮子的过程中不仅能让我更加熟悉语言的特性，还能让我深入思考这些轮子的底层实现原理。 同时，造好的轮子也可以用于以后的项目中，从而提高开发效率。\nC++ 是一门非常适合造轮子的语言，搭配上 CMake 这个构建工具，可以轻松构建出一个专属于自己的轮子库。 这样在以后的项目中，只需要引入这个库，就可以使用自己造的轮子了。\n例如，当我曾经实现了一个线程池，未来如果要使用它， 只需要 include 我的 wheel 库：\n#include int main() { wheel::ThreadPool thread_pool(4); ... } 本文将会用一个简单的例子来介绍如何使用 C++ 和 CMake 来构建一个专属于自己的轮子库。\n2. 例子介绍 本文的目标是实现一个加法器，输入两个整数，加法器会输出它们的和。 这个加法器用到了wheel库中的math.hpp文件里面的add函数。\n3. 构建轮子库 首先来看一下最终的 wheel 库目录结构：\nwheel ├── CMakeLists.txt ├── include │ └── wheel │ └── math.hpp └── src └── math.cpp 约定include/wheel内存的头文件是对外公开的接口，src内存源文件（也可以存私有头文件），test内存的测试文件。\n接下来我们分别来看一下这几个文件的内容。\ninclude/wheel/math.hpp定义要暴露的接口：\n#pragma once namespace wheel { int add(int a, int b); } // namespace wheel 信息\n任何 C++ 项目都要有单独的命名空间，以避免与其他库命名冲突。\nsrc/math.cpp实现接口的功能:\n#include namespace wheel { int add(int a, int b) { return a + b; } } // namespace wheel CMakelists.txt文件内容如下：\ncmake_minimum_required(VERSION 3.16) option(BUILD_WHEEL_TEST \"build wheel test\" OFF) set(TARGET wheel) set(CMAKE_CXX_STANDARD 23) set(CMAKE_CXX_STANDARD_REQUIRED ON) set(CMAKE_CXX_EXTENSIONS OFF) set(CMAKE_EXPORT_COMPILE_COMMANDS 1) project( ${TARGET} VERSION 0.1.0 DESCRIPTION \"wheel\" HOMEPAGE_URL \"https://github.com/m1dsolo/wheel\" LANGUAGES C CXX ) file(GLOB_RECURSE SRC CONFIGURE_DEPENDS \"src/*.cpp\") add_library(${TARGET} OBJECT ${SRC}) target_include_directories(${TARGET} PUBLIC include) if (BUILD_WHEEL_TEST) add_subdirectory(test) endif() 如果有看不懂的选项，可以让 GPT 帮你讲解～\n接下来使用以下命令来进行构建和编译：\ncmake -B build -G Ninja cmake --build build -j8 4. 使用轮子库 创建一个新项目adder，其目录结构如下：\nadder ├── CMakeLists.txt ├── src │ └── main.cpp └── third_party └── wheel src/main.cpp内容如下：\n#include #include int main() { int res = wheel::add(1, 2); std::cout \u003c\u003c res \u003c\u003c std::endl; return 0; } CMakeLists.txt内容如下：\ncmake_minimum_required(VERSION 3.16) set(TARGET adder) set(CMAKE_CXX_STANDARD 23) set(CMAKE_CXX_STANDARD_REQUIRED ON) set(CMAKE_CXX_EXTENSIONS OFF) set(CMAKE_EXPORT_COMPILE_COMMANDS 1) project( ${TARGET} VERSION 0.1.0 DESCRIPTION \"adder\" HOMEPAGE_URL \"https://github.com/m1dsolo/adder\" LANGUAGES C CXX ) set(WHEEL_ROOT ${PROJECT_SOURCE_DIR}/third_party/wheel) add_subdirectory(${WHEEL_ROOT}) file(GLOB_RECURSE SRC CONFIGURE_DEPENDS \"src/*.cpp\") add_executable(${TARGET} ${SRC}) target_include_directories(${TARGET} PRIVATE include PRIVATE ${WHEEL_ROOT}/include ) target_link_libraries(${TARGET} PRIVATE wheel ) 也就是编译时同时需要编译并链接wheel库。\n接下来构建并编译adder程序：\ncmake -B build -G Ninja cmake --build build -j8 编译后我们就可以成功运行adder了：\n./build/adder 可以看到终端上输出了我们的预期结果。\n5. 测试轮子库（可选） 轮子库本质上就是一个 C++项目，推荐在写好轮子后，写一些测试用例来验证轮子的正确性。 这里我们选择使用 GoogleTest 来进行测试。\n在wheel内添加：\nwheel ├── test │ ├── CMakeLists.txt │ └── math.cpp └── third_party 安装 GoogleTest 到third_party/googletest：\ngit submodule add --depth=1 https://github.com/google/googletest.git third_party/googletest 在test/CMakeLists.txt中添加：\nset(TARGET test) set(GTEST_ROOT ${PROJECT_SOURCE_DIR}/third_party/googletest) add_subdirectory(${GTEST_ROOT} ${CMAKE_BINARY_DIR}/googletest) enable_testing() file(GLOB_RECURSE SRC \"*.cpp\") add_executable(${TARGET} ${SRC}) target_include_directories(${TARGET} PRIVATE ${GTEST_ROOT}/include PRIVATE ${PROJECT_SOURCE_DIR}/include ) target_link_libraries(${TARGET} PRIVATE GTest::gtest_main PRIVATE wheel ) add_test(NAME ${TARGET} COMMAND ${TARGET}) 在test/math.cpp添加对 math 的测试用例：\n#include #include namespace wheel { TEST(MathTest, AddFunction) { EXPECT_EQ(wheel::add(1, 1), 2); EXPECT_EQ(wheel::add(-1, 1), 0); EXPECT_EQ(wheel::add(-1, -1), -2); EXPECT_EQ(wheel::add(0, 0), 0); } } // namespace wheel 由于之前我们已经配置了BUILD_WHEEL_TEST这个 option ，所以只需要在构建项目的时候指定这个参数：\ncmake -B build -G Ninja -DBUILD_WHEEL_TEST=ON cmake --build build -j8 编译成功后运行测试：\n./build/test/test 6. 结语 在完成轮子库的构建后，建议撰写一些笔记或博客，记录下整个过程和思考。 这不仅有助于巩固所学知识，还能在未来需要时快速回顾和使用这些轮子库。 通过不断地实践和总结，能够更深入地理解编程语言和工具的特性，从而提升开发效率和代码质量。\n你可以参考我分享的 轮子库 ， 代码仅供学习参考，不建议直接用于生产环境。\n以后有时间，我会分享一些曾经造过的轮子的实现原理，敬请期待！\n","wordCount":"360","inLanguage":"zh-cn","image":"https://m1dsolo.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E","datePublished":"2025-02-21T00:00:00Z","dateModified":"2025-02-21T00:00:00Z","author":{"@type":"Person","name":"m1dsolo"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://m1dsolo.github.io/posts/cpp-wheel/"},"publisher":{"@type":"Organization","name":"m1dsolo's blog","logo":{"@type":"ImageObject","url":"https://m1dsolo.github.io/favicon.ico"}}}</script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://m1dsolo.github.io/ accesskey=h title="主页 (Alt + H)">主页</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)"><svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://m1dsolo.github.io/posts/ title=文章><span>文章</span></a></li><li><a href=https://m1dsolo.github.io/tags/ title=标签><span>标签</span></a></li><li><a href=https://m1dsolo.github.io/search/ title="搜索 (Alt + /)" accesskey=/><span>搜索</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><div class=breadcrumbs><a href=https://m1dsolo.github.io/>Home</a>&nbsp;»&nbsp;<a href=https://m1dsolo.github.io/posts/>文章</a></div><h1 class="post-title entry-hint-parent">在 C++ 中使用 CMake 构建专属于自己的轮子库</h1><div class=post-meta><span title='2025-02-21 00:00:00 +0000 UTC'>2025-2-21</span>&nbsp;·&nbsp;360 words
+·&nbsp<span id=busuanzi_page_pv></span>&nbsp阅读量
+   </div></header><div class=toc><details open><summary accesskey=c title="(Alt + C)"><span class=details>Table of Contents</span></summary><div class=inner><nav id=TableOfContents><ul><li><a href=#1-前言>1. 前言</a></li><li><a href=#2-例子介绍>2. 例子介绍</a></li><li><a href=#3-构建轮子库>3. 构建轮子库</a></li><li><a href=#4-使用轮子库>4. 使用轮子库</a></li><li><a href=#5-测试轮子库可选>5. 测试轮子库（可选）</a></li><li><a href=#6-结语>6. 结语</a></li></ul></nav></div></details></div><div class=post-content><h2 id=1-前言>1. 前言<a hidden class=anchor aria-hidden=true href=#1-前言>#</a></h2><p>掌握一门编程语言的关键之一就是多动手写代码。
+当我不知道该写什么代码时，通常会选择造轮子。
+造轮子的过程中不仅能让我更加熟悉语言的特性，还能让我深入思考这些轮子的底层实现原理。
+同时，造好的轮子也可以用于以后的项目中，从而提高开发效率。</p><p>C++ 是一门非常适合造轮子的语言，搭配上 CMake 这个构建工具，可以轻松构建出一个专属于自己的轮子库。
+这样在以后的项目中，只需要引入这个库，就可以使用自己造的轮子了。</p><p>例如，当我曾经实现了一个线程池，未来如果要使用它，
+只需要 <code>include</code> 我的 <code>wheel</code> 库：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;wheel/thread_pool.hpp&gt;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=kt>int</span> <span class=nf>main</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>wheel</span><span class=o>::</span><span class=n>ThreadPool</span> <span class=n>thread_pool</span><span class=p>(</span><span class=mi>4</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=p>...</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>本文将会用一个简单的例子来介绍如何使用 C++ 和 CMake 来构建一个专属于自己的轮子库。</p><h2 id=2-例子介绍>2. 例子介绍<a hidden class=anchor aria-hidden=true href=#2-例子介绍>#</a></h2><p>本文的目标是实现一个加法器，输入两个整数，加法器会输出它们的和。
+这个加法器用到了<code>wheel</code>库中的<code>math.hpp</code>文件里面的<code>add</code>函数。</p><h2 id=3-构建轮子库>3. 构建轮子库<a hidden class=anchor aria-hidden=true href=#3-构建轮子库>#</a></h2><p>首先来看一下最终的 <code>wheel</code> 库目录结构：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>wheel
+</span></span><span class=line><span class=cl>├── CMakeLists.txt
+</span></span><span class=line><span class=cl>├── include
+</span></span><span class=line><span class=cl>│   └── wheel
+</span></span><span class=line><span class=cl>│       └── math.hpp
+</span></span><span class=line><span class=cl>└── src
+</span></span><span class=line><span class=cl>    └── math.cpp
+</span></span></code></pre></div><p>约定<code>include/wheel</code>内存的头文件是对外公开的接口，<code>src</code>内存源文件（也可以存私有头文件），<code>test</code>内存的测试文件。</p><p>接下来我们分别来看一下这几个文件的内容。</p><p><code>include/wheel/math.hpp</code>定义要暴露的接口：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=cp>#pragma once
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=n>wheel</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kt>int</span> <span class=nf>add</span><span class=p>(</span><span class=kt>int</span> <span class=n>a</span><span class=p>,</span> <span class=kt>int</span> <span class=n>b</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=p>}</span>  <span class=c1>// namespace wheel
+</span></span></span></code></pre></div><style type=text/css>.notice{--title-color:#fff;--title-background-color:#6be;--content-color:#444;--content-background-color:#e7f2fa}.notice.info{--title-background-color:#fb7;--content-background-color:#fec}.notice.tip{--title-background-color:#5a5;--content-background-color:#efe}.notice.warning{--title-background-color:#c33;--content-background-color:#fee}@media(prefers-color-scheme:dark){.notice{--title-color:#fff;--title-background-color:#069;--content-color:#ddd;--content-background-color:#023}.notice.info{--title-background-color:#a50;--content-background-color:#420}.notice.tip{--title-background-color:#363;--content-background-color:#121}.notice.warning{--title-background-color:#800;--content-background-color:#400}}body.dark .notice{--title-color:#fff;--title-background-color:#069;--content-color:#ddd;--content-background-color:#023}body.dark .notice.info{--title-background-color:#a50;--content-background-color:#420}body.dark .notice.tip{--title-background-color:#363;--content-background-color:#121}body.dark .notice.warning{--title-background-color:#800;--content-background-color:#400}.notice{padding:18px;line-height:24px;margin-bottom:24px;border-radius:4px;color:var(--content-color);background:var(--content-background-color)}.notice p:last-child{margin-bottom:0}.notice-title{margin:-18px -18px 12px;padding:4px 18px;border-radius:4px 4px 0 0;font-weight:700;color:var(--title-color);background:var(--title-background-color)}.icon-notice{display:inline-flex;align-self:center;margin-right:8px}.icon-notice img,.icon-notice svg{height:1em;width:1em;fill:currentColor}.icon-notice img,.icon-notice.baseline svg{top:.125em;position:relative}</style><div class="notice info"><p class=notice-title><span class="icon-notice baseline"><svg viewBox="92 59.5 300 300"><path d="M292 303.25V272c0-3.516-2.734-6.25-6.25-6.25H267v-1e2c0-3.516-2.734-6.25-6.25-6.25h-62.5c-3.516.0-6.25 2.734-6.25 6.25V197c0 3.516 2.734 6.25 6.25 6.25H217v62.5h-18.75c-3.516.0-6.25 2.734-6.25 6.25v31.25c0 3.516 2.734 6.25 6.25 6.25h87.5c3.516.0 6.25-2.734 6.25-6.25zm-25-175V97c0-3.516-2.734-6.25-6.25-6.25h-37.5c-3.516.0-6.25 2.734-6.25 6.25v31.25c0 3.516 2.734 6.25 6.25 6.25h37.5c3.516.0 6.25-2.734 6.25-6.25zm125 81.25c0 82.813-67.188 150-150 150-82.813.0-150-67.188-150-150 0-82.813 67.188-150 150-150 82.813.0 150 67.188 150 150z"/></svg>
+</span>信息</p><p>任何 C++ 项目都要有单独的命名空间，以避免与其他库命名冲突。</p></div><p><code>src/math.cpp</code>实现接口的功能:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;wheel/math.hpp&gt;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=n>wheel</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kt>int</span> <span class=nf>add</span><span class=p>(</span><span class=kt>int</span> <span class=n>a</span><span class=p>,</span> <span class=kt>int</span> <span class=n>b</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>a</span> <span class=o>+</span> <span class=n>b</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=p>}</span>  <span class=c1>// namespace wheel
+</span></span></span></code></pre></div><p><code>CMakelists.txt</code>文件内容如下：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-cmake data-lang=cmake><span class=line><span class=cl><span class=nb>cmake_minimum_required</span><span class=p>(</span><span class=s>VERSION</span> <span class=s>3.16</span><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>option</span><span class=p>(</span><span class=s>BUILD_WHEEL_TEST</span> <span class=s2>&#34;build wheel test&#34;</span> <span class=s>OFF</span><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>set</span><span class=p>(</span><span class=s>TARGET</span> <span class=s>wheel</span><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>set</span><span class=p>(</span><span class=s>CMAKE_CXX_STANDARD</span> <span class=s>23</span><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>set</span><span class=p>(</span><span class=s>CMAKE_CXX_STANDARD_REQUIRED</span> <span class=s>ON</span><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>set</span><span class=p>(</span><span class=s>CMAKE_CXX_EXTENSIONS</span> <span class=s>OFF</span><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>set</span><span class=p>(</span><span class=s>CMAKE_EXPORT_COMPILE_COMMANDS</span> <span class=s>1</span><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>project</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=o>${</span><span class=nv>TARGET</span><span class=o>}</span>
+</span></span><span class=line><span class=cl>    <span class=s>VERSION</span> <span class=s>0.1.0</span>
+</span></span><span class=line><span class=cl>    <span class=s>DESCRIPTION</span> <span class=s2>&#34;wheel&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=s>HOMEPAGE_URL</span> <span class=s2>&#34;https://github.com/m1dsolo/wheel&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=s>LANGUAGES</span> <span class=s>C</span> <span class=s>CXX</span>
+</span></span><span class=line><span class=cl><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>file</span><span class=p>(</span><span class=s>GLOB_RECURSE</span> <span class=s>SRC</span> <span class=s>CONFIGURE_DEPENDS</span> <span class=s2>&#34;src/*.cpp&#34;</span><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>add_library</span><span class=p>(</span><span class=o>${</span><span class=nv>TARGET</span><span class=o>}</span> <span class=s>OBJECT</span> <span class=o>${</span><span class=nv>SRC</span><span class=o>}</span><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>target_include_directories</span><span class=p>(</span><span class=o>${</span><span class=nv>TARGET</span><span class=o>}</span> <span class=s>PUBLIC</span> <span class=s>include</span><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>if</span> <span class=p>(</span><span class=s>BUILD_WHEEL_TEST</span><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span>    <span class=nb>add_subdirectory</span><span class=p>(</span><span class=s>test</span><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>endif</span><span class=p>()</span><span class=err>
+</span></span></span></code></pre></div><p>如果有看不懂的选项，可以让 GPT 帮你讲解～</p><p>接下来使用以下命令来进行构建和编译：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>cmake -B build -G Ninja
+</span></span><span class=line><span class=cl>cmake --build build -j8
+</span></span></code></pre></div><h2 id=4-使用轮子库>4. 使用轮子库<a hidden class=anchor aria-hidden=true href=#4-使用轮子库>#</a></h2><p>创建一个新项目<code>adder</code>，其目录结构如下：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>adder
+</span></span><span class=line><span class=cl>├── CMakeLists.txt
+</span></span><span class=line><span class=cl>├── src
+</span></span><span class=line><span class=cl>│   └── main.cpp
+</span></span><span class=line><span class=cl>└── third_party
+</span></span><span class=line><span class=cl>    └── wheel
+</span></span></code></pre></div><p><code>src/main.cpp</code>内容如下：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;iostream&gt;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;wheel/math.hpp&gt;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=kt>int</span> <span class=nf>main</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>int</span> <span class=n>res</span> <span class=o>=</span> <span class=n>wheel</span><span class=o>::</span><span class=n>add</span><span class=p>(</span><span class=mi>1</span><span class=p>,</span> <span class=mi>2</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>std</span><span class=o>::</span><span class=n>cout</span> <span class=o>&lt;&lt;</span> <span class=n>res</span> <span class=o>&lt;&lt;</span> <span class=n>std</span><span class=o>::</span><span class=n>endl</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p><code>CMakeLists.txt</code>内容如下：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-cmake data-lang=cmake><span class=line><span class=cl><span class=nb>cmake_minimum_required</span><span class=p>(</span><span class=s>VERSION</span> <span class=s>3.16</span><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>set</span><span class=p>(</span><span class=s>TARGET</span> <span class=s>adder</span><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>set</span><span class=p>(</span><span class=s>CMAKE_CXX_STANDARD</span> <span class=s>23</span><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>set</span><span class=p>(</span><span class=s>CMAKE_CXX_STANDARD_REQUIRED</span> <span class=s>ON</span><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>set</span><span class=p>(</span><span class=s>CMAKE_CXX_EXTENSIONS</span> <span class=s>OFF</span><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>set</span><span class=p>(</span><span class=s>CMAKE_EXPORT_COMPILE_COMMANDS</span> <span class=s>1</span><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>project</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=o>${</span><span class=nv>TARGET</span><span class=o>}</span>
+</span></span><span class=line><span class=cl>    <span class=s>VERSION</span> <span class=s>0.1.0</span>
+</span></span><span class=line><span class=cl>    <span class=s>DESCRIPTION</span> <span class=s2>&#34;adder&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=s>HOMEPAGE_URL</span> <span class=s2>&#34;https://github.com/m1dsolo/adder&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=s>LANGUAGES</span> <span class=s>C</span> <span class=s>CXX</span>
+</span></span><span class=line><span class=cl><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>set</span><span class=p>(</span><span class=s>WHEEL_ROOT</span> <span class=o>${</span><span class=nv>PROJECT_SOURCE_DIR</span><span class=o>}</span><span class=s>/third_party/wheel</span><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>add_subdirectory</span><span class=p>(</span><span class=o>${</span><span class=nv>WHEEL_ROOT</span><span class=o>}</span><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>file</span><span class=p>(</span><span class=s>GLOB_RECURSE</span> <span class=s>SRC</span> <span class=s>CONFIGURE_DEPENDS</span> <span class=s2>&#34;src/*.cpp&#34;</span><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>add_executable</span><span class=p>(</span><span class=o>${</span><span class=nv>TARGET</span><span class=o>}</span> <span class=o>${</span><span class=nv>SRC</span><span class=o>}</span><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>target_include_directories</span><span class=p>(</span><span class=o>${</span><span class=nv>TARGET</span><span class=o>}</span>
+</span></span><span class=line><span class=cl>    <span class=s>PRIVATE</span> <span class=s>include</span>
+</span></span><span class=line><span class=cl>    <span class=s>PRIVATE</span> <span class=o>${</span><span class=nv>WHEEL_ROOT</span><span class=o>}</span><span class=s>/include</span>
+</span></span><span class=line><span class=cl><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>target_link_libraries</span><span class=p>(</span><span class=o>${</span><span class=nv>TARGET</span><span class=o>}</span>
+</span></span><span class=line><span class=cl>    <span class=s>PRIVATE</span> <span class=s>wheel</span>
+</span></span><span class=line><span class=cl><span class=p>)</span><span class=err>
+</span></span></span></code></pre></div><p>也就是编译时同时需要编译并链接<code>wheel</code>库。</p><p>接下来构建并编译<code>adder</code>程序：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>cmake -B build -G Ninja
+</span></span><span class=line><span class=cl>cmake --build build -j8
+</span></span></code></pre></div><p>编译后我们就可以成功运行<code>adder</code>了：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>./build/adder
+</span></span></code></pre></div><p>可以看到终端上输出了我们的预期结果。</p><h2 id=5-测试轮子库可选>5. 测试轮子库（可选）<a hidden class=anchor aria-hidden=true href=#5-测试轮子库可选>#</a></h2><p>轮子库本质上就是一个 C++项目，推荐在写好轮子后，写一些测试用例来验证轮子的正确性。
+这里我们选择使用 <a href=https://github.com/google/googletest>GoogleTest</a> 来进行测试。</p><p>在<code>wheel</code>内添加：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>wheel
+</span></span><span class=line><span class=cl>├── <span class=nb>test</span>
+</span></span><span class=line><span class=cl>│   ├── CMakeLists.txt
+</span></span><span class=line><span class=cl>│   └── math.cpp
+</span></span><span class=line><span class=cl>└── third_party
+</span></span></code></pre></div><p>安装 GoogleTest 到<code>third_party/googletest</code>：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>git submodule add --depth<span class=o>=</span><span class=m>1</span> https://github.com/google/googletest.git third_party/googletest
+</span></span></code></pre></div><p>在<code>test/CMakeLists.txt</code>中添加：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-cmake data-lang=cmake><span class=line><span class=cl><span class=nb>set</span><span class=p>(</span><span class=s>TARGET</span> <span class=s>test</span><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>set</span><span class=p>(</span><span class=s>GTEST_ROOT</span> <span class=o>${</span><span class=nv>PROJECT_SOURCE_DIR</span><span class=o>}</span><span class=s>/third_party/googletest</span><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>add_subdirectory</span><span class=p>(</span><span class=o>${</span><span class=nv>GTEST_ROOT</span><span class=o>}</span> <span class=o>${</span><span class=nv>CMAKE_BINARY_DIR</span><span class=o>}</span><span class=s>/googletest</span><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>enable_testing</span><span class=p>()</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>file</span><span class=p>(</span><span class=s>GLOB_RECURSE</span> <span class=s>SRC</span> <span class=s2>&#34;*.cpp&#34;</span><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>add_executable</span><span class=p>(</span><span class=o>${</span><span class=nv>TARGET</span><span class=o>}</span> <span class=o>${</span><span class=nv>SRC</span><span class=o>}</span><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>target_include_directories</span><span class=p>(</span><span class=o>${</span><span class=nv>TARGET</span><span class=o>}</span>
+</span></span><span class=line><span class=cl>    <span class=s>PRIVATE</span> <span class=o>${</span><span class=nv>GTEST_ROOT</span><span class=o>}</span><span class=s>/include</span>
+</span></span><span class=line><span class=cl>    <span class=s>PRIVATE</span> <span class=o>${</span><span class=nv>PROJECT_SOURCE_DIR</span><span class=o>}</span><span class=s>/include</span>
+</span></span><span class=line><span class=cl><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>target_link_libraries</span><span class=p>(</span><span class=o>${</span><span class=nv>TARGET</span><span class=o>}</span>
+</span></span><span class=line><span class=cl>    <span class=s>PRIVATE</span> <span class=s>GTest::gtest_main</span>
+</span></span><span class=line><span class=cl>    <span class=s>PRIVATE</span> <span class=s>wheel</span>
+</span></span><span class=line><span class=cl><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>add_test</span><span class=p>(</span><span class=s>NAME</span> <span class=o>${</span><span class=nv>TARGET</span><span class=o>}</span> <span class=s>COMMAND</span> <span class=o>${</span><span class=nv>TARGET</span><span class=o>}</span><span class=p>)</span><span class=err>
+</span></span></span></code></pre></div><p>在<code>test/math.cpp</code>添加对 math 的测试用例：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;wheel/math.hpp&gt;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;gtest/gtest.h&gt;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=n>wheel</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>TEST</span><span class=p>(</span><span class=n>MathTest</span><span class=p>,</span> <span class=n>AddFunction</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>EXPECT_EQ</span><span class=p>(</span><span class=n>wheel</span><span class=o>::</span><span class=n>add</span><span class=p>(</span><span class=mi>1</span><span class=p>,</span> <span class=mi>1</span><span class=p>),</span> <span class=mi>2</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>EXPECT_EQ</span><span class=p>(</span><span class=n>wheel</span><span class=o>::</span><span class=n>add</span><span class=p>(</span><span class=o>-</span><span class=mi>1</span><span class=p>,</span> <span class=mi>1</span><span class=p>),</span> <span class=mi>0</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>EXPECT_EQ</span><span class=p>(</span><span class=n>wheel</span><span class=o>::</span><span class=n>add</span><span class=p>(</span><span class=o>-</span><span class=mi>1</span><span class=p>,</span> <span class=o>-</span><span class=mi>1</span><span class=p>),</span> <span class=o>-</span><span class=mi>2</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>EXPECT_EQ</span><span class=p>(</span><span class=n>wheel</span><span class=o>::</span><span class=n>add</span><span class=p>(</span><span class=mi>0</span><span class=p>,</span> <span class=mi>0</span><span class=p>),</span> <span class=mi>0</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=p>}</span>  <span class=c1>// namespace wheel
+</span></span></span></code></pre></div><p>由于之前我们已经配置了<code>BUILD_WHEEL_TEST</code>这个 option ，所以只需要在构建项目的时候指定这个参数：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>cmake -B build -G Ninja -DBUILD_WHEEL_TEST<span class=o>=</span>ON
+</span></span><span class=line><span class=cl>cmake --build build -j8
+</span></span></code></pre></div><p>编译成功后运行测试：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>./build/test/test
+</span></span></code></pre></div><h2 id=6-结语>6. 结语<a hidden class=anchor aria-hidden=true href=#6-结语>#</a></h2><p>在完成轮子库的构建后，建议撰写一些笔记或博客，记录下整个过程和思考。
+这不仅有助于巩固所学知识，还能在未来需要时快速回顾和使用这些轮子库。
+通过不断地实践和总结，能够更深入地理解编程语言和工具的特性，从而提升开发效率和代码质量。</p><p>你可以参考我分享的 <a href=https://github.com/m1dsolo/wheel>轮子库</a> ，
+代码仅供学习参考，不建议直接用于生产环境。</p><p>以后有时间，我会分享一些曾经造过的轮子的实现原理，敬请期待！</p></div><footer class=post-footer><ul class=post-tags><li><a href=https://m1dsolo.github.io/tags/c++/>C++</a></li><li><a href=https://m1dsolo.github.io/tags/cmake/>CMake</a></li></ul><nav class=paginav><a class=next href=https://m1dsolo.github.io/posts/dwm-noswallow/><span class=title>»</span><br><span>在 dwm 中防止特定窗口被 swallow 的方法</span></a></nav></footer><div id=tw-comment></div><script>const getStoredTheme=()=>localStorage.getItem("pref-theme")==="light"?"":"",setGiscusTheme=()=>{const e=e=>{const t=document.querySelector("iframe.giscus-frame");t&&t.contentWindow.postMessage({giscus:e},"https://giscus.app")};e({setConfig:{theme:getStoredTheme()}})};document.addEventListener("DOMContentLoaded",()=>{const s={src:"https://giscus.app/client.js","data-repo":"m1dsolo/m1dsolo.github.io","data-repo-id":"R_kgDONmlNVQ","data-category":"Announcements","data-category-id":"DIC_kwDONmlNVc4Cm94p","data-mapping":"pathname","data-strict":"0","data-reactions-enabled":"1","data-emit-metadata":"0","data-input-position":"bottom","data-theme":getStoredTheme(),"data-lang":"zh-CN","data-loading":"lazy",crossorigin:"anonymous"},e=document.createElement("script");Object.entries(s).forEach(([t,n])=>e.setAttribute(t,n)),document.querySelector("#tw-comment").appendChild(e);const t=document.querySelector("#theme-toggle");t&&t.addEventListener("click",setGiscusTheme);const n=document.querySelector("#theme-toggle-float");n&&n.addEventListener("click",setGiscusTheme)})</script></article></main><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg></a><div style=display:flex;align-items:center;justify-content:center><img src=/image/beian-logo.png width=12 style=margin-right:5px>
+<a href=https://beian.miit.gov.cn rel=noreferrer target=_blank style=font-size:12px>京ICP备2025109231号-1</a></div><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>
