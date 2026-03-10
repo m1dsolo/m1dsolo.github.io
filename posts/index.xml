@@ -11,61 +11,21 @@
     </image>
     <generator>Hugo</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Mon, 09 Mar 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 10 Mar 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://m1dsolo.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>局域网 WoL 远程开机配置指南</title>
+      <title>使用 Hugo 搭建博客并自动部署到 GitHub Pages</title>
+      <link>https://m1dsolo.github.io/posts/hugo-blog/</link>
+      <pubDate>Tue, 10 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://m1dsolo.github.io/posts/hugo-blog/</guid>
+      <description>本文介绍如何使用 Hugo &#43; PaperMod 主题搭建静态博客，并通过 GitHub Actions 自动部署到 GitHub Pages。涵盖图床、搜索、评论、数学公式等常用功能配置，以及国内云服务器部署优化方案。</description>
+    </item>
+    <item>
+      <title>局域网 WoL 远程开机配置指南（Arch Linux &#43; 技嘉主板）</title>
       <link>https://m1dsolo.github.io/posts/wol/</link>
       <pubDate>Mon, 09 Mar 2026 00:00:00 +0000</pubDate>
       <guid>https://m1dsolo.github.io/posts/wol/</guid>
-      <description>&lt;h2 id=&#34;1-前言&#34;&gt;1. 前言&lt;/h2&gt;
-&lt;p&gt;Wake-on-LAN（简称 WoL）是一种通过网络信号远程唤醒计算机的技术。&lt;/p&gt;
-&lt;p&gt;实现效果：笔记本和台式机在同一局域网下，台式机连接网线，笔记本可以把台式机开机。&lt;/p&gt;
-&lt;p&gt;本文记录在 Arch Linux 上配置 WoL 的完整流程，主板为技嘉 B650M AORUS。&lt;/p&gt;
-&lt;hr&gt;
-&lt;h2 id=&#34;2-主板-bios-配置&#34;&gt;2. 主板 BIOS 配置&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;主板型号：&lt;/strong&gt; 技嘉 B650M AORUS（BIOS 版本 F33b）&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;BIOS 设置：&lt;/strong&gt;&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;开机按 &lt;strong&gt;Del&lt;/strong&gt; 进入 BIOS&lt;/li&gt;
-&lt;li&gt;进入 &lt;code&gt;Settings → IO Ports&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;配置以下选项：&lt;/li&gt;
-&lt;/ol&gt;
-&lt;table&gt;
-  &lt;thead&gt;
-      &lt;tr&gt;
-          &lt;th&gt;选项&lt;/th&gt;
-          &lt;th&gt;设置&lt;/th&gt;
-          &lt;th&gt;说明&lt;/th&gt;
-      &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-      &lt;tr&gt;
-          &lt;td&gt;&lt;code&gt;ErP Support&lt;/code&gt;&lt;/td&gt;
-          &lt;td&gt;&lt;strong&gt;Disabled&lt;/strong&gt;&lt;/td&gt;
-          &lt;td&gt;必须关闭，否则关机后网卡断电&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;&lt;code&gt;Network Stack&lt;/code&gt;&lt;/td&gt;
-          &lt;td&gt;&lt;strong&gt;Enabled&lt;/strong&gt;&lt;/td&gt;
-          &lt;td&gt;启用网络栈&lt;/td&gt;
-      &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-&lt;ol start=&#34;4&#34;&gt;
-&lt;li&gt;按 &lt;strong&gt;F10&lt;/strong&gt; 保存并退出&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;&lt;strong&gt;注意：&lt;/strong&gt; &lt;code&gt;ErP&lt;/code&gt; 是欧盟节能标准，开启后关机时主板会完全断电，导致 WoL 失效。&lt;/p&gt;
-&lt;hr&gt;
-&lt;h2 id=&#34;3-获取网卡信息&#34;&gt;3. 获取网卡信息&lt;/h2&gt;
-&lt;p&gt;进入台式机 Arch Linux，执行：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ip addr
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;输出示例：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;2: enp12s0: &amp;lt;BROADCAST,MULTICAST,UP,LOWER_UP&amp;gt; mtu &lt;span class=&#34;m&#34;&gt;1500&lt;/span&gt; qdisc fq_codel state UP group default qlen &lt;span class=&#34;m&#34;&gt;1000&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    link/ether 10:ff:e0:ce:62:08 brd ff:ff:ff:ff:ff:ff
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    altname enx10ffe0ce6208
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    inet 192.168.1.10/24 brd 192.168.1.255 scope global dynamic noprefixroute enp12s0
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;记录两个关键信息：&lt;/strong&gt;&lt;/p&gt;</description>
+      <description>本文介绍如何在 Arch Linux 上配置 Wake-on-LAN（WoL）远程开机功能，涵盖技嘉 B650M 主板 BIOS 设置、网卡配置、systemd 服务创建，以及笔记本远程唤醒台式机的完整流程。</description>
     </item>
     <item>
       <title>在 C&#43;&#43; 中使用 CMake 构建专属于自己的轮子库</title>
@@ -240,31 +200,6 @@
       <pubDate>Mon, 17 Feb 2025 00:00:00 +0000</pubDate>
       <guid>https://m1dsolo.github.io/posts/dwm-noswallow/</guid>
       <description>本文介绍如何在 dwm 窗口管理器的 swallow 补丁基础上，实现选择性防止特定窗口被嵌入终端的功能。通过简单的文件通信机制，使用 noswallow 脚本即可控制窗口的 swallow 行为。</description>
-    </item>
-    <item>
-      <title>使用 Hugo 搭建个人博客网站并自动部署至 GitHub Pages </title>
-      <link>https://m1dsolo.github.io/posts/hugo-blog/</link>
-      <pubDate>Wed, 12 Feb 2025 00:00:00 +0000</pubDate>
-      <guid>https://m1dsolo.github.io/posts/hugo-blog/</guid>
-      <description>&lt;h2 id=&#34;1-前言&#34;&gt;1. 前言&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&#34;https://github.com/gohugoio/hugo&#34;&gt;Hugo&lt;/a&gt; 是一个用 Go 语言编写的静态网站生成器，
-它可以将 Markdown 文件转换为 HTML 文件，支持主题和插件，
-生成的网站可以直接部署到 GitHub Pages 、云服务器等。&lt;/p&gt;
-&lt;p&gt;本文将介绍如何使用 Hugo 搭建个人博客并使用 GitHub Actions 自动部署到 GitHub Pages 上。&lt;/p&gt;
-&lt;p&gt;实现的效果是，当我们将博客的 Markdown 文件推送到 GitHub 仓库时，
-GitHub Actions 会自动构建 Hugo 网站，并将生成的 HTML 文件推送到 GitHub Pages 上，
-这样我们就可以通过&lt;code&gt;https://&amp;lt;username&amp;gt;.github.io&lt;/code&gt;访问我们的博客。&lt;/p&gt;
-&lt;p&gt;后面会大致介绍下如何将 Hugo 部署到云服务器上，没有特殊需求不建议折腾。&lt;/p&gt;
-&lt;h2 id=&#34;2-安装-hugo&#34;&gt;2. 安装 Hugo&lt;/h2&gt;
-&lt;p&gt;具体安装方法可以参考 &lt;a href=&#34;https://gohugo.io/getting-started/installing&#34;&gt;Hugo 官方文档&lt;/a&gt; 。&lt;/p&gt;
-&lt;p&gt;以我使用的 Arch Linux 为例，可以通过以下命令安装 Hugo ：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo pacman -S hugo
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;3-创建-hugo-网站&#34;&gt;3. 创建 Hugo 网站&lt;/h2&gt;
-&lt;p&gt;初学者可以参考 &lt;a href=&#34;https://gohugo.io/getting-started/quick-start&#34;&gt;Hugo 官方教程&lt;/a&gt; 。
-由于我使用的是 &lt;a href=&#34;https://github.com/adityatelange/hugo-PaperMod&#34;&gt;PaperMod&lt;/a&gt; 主题，
-如果你也想使用这个主题，
-可以参考 &lt;a href=&#34;https://github.com/adityatelange/hugo-PaperMod/wiki/Installation&#34;&gt;PaperMod 安装教程&lt;/a&gt; 。&lt;/p&gt;
-&lt;p&gt;以下我列出使用 git submodule 方法（推荐）创建 PaperMod 主题的 Hugo 网站的命令：&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

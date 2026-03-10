@@ -11,13 +11,13 @@
     </image>
     <generator>Hugo</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Mon, 09 Mar 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 10 Mar 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://m1dsolo.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Arch</title>
-      <link>https://m1dsolo.github.io/tags/arch/</link>
-      <pubDate>Mon, 09 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>https://m1dsolo.github.io/tags/arch/</guid>
+      <title>Hugo</title>
+      <link>https://m1dsolo.github.io/tags/hugo/</link>
+      <pubDate>Tue, 10 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://m1dsolo.github.io/tags/hugo/</guid>
       <description></description>
     </item>
     <item>
@@ -32,6 +32,13 @@
       <link>https://m1dsolo.github.io/tags/wol/</link>
       <pubDate>Mon, 09 Mar 2026 00:00:00 +0000</pubDate>
       <guid>https://m1dsolo.github.io/tags/wol/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>远程开机</title>
+      <link>https://m1dsolo.github.io/tags/%E8%BF%9C%E7%A8%8B%E5%BC%80%E6%9C%BA/</link>
+      <pubDate>Mon, 09 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://m1dsolo.github.io/tags/%E8%BF%9C%E7%A8%8B%E5%BC%80%E6%9C%BA/</guid>
       <description></description>
     </item>
     <item>
@@ -67,13 +74,6 @@
       <link>https://m1dsolo.github.io/tags/%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86/</link>
       <pubDate>Mon, 17 Feb 2025 00:00:00 +0000</pubDate>
       <guid>https://m1dsolo.github.io/tags/%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Hugo</title>
-      <link>https://m1dsolo.github.io/tags/hugo/</link>
-      <pubDate>Wed, 12 Feb 2025 00:00:00 +0000</pubDate>
-      <guid>https://m1dsolo.github.io/tags/hugo/</guid>
       <description></description>
     </item>
   </channel>
