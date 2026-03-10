@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>WoL on m1dsolo&#39;s blog</title>
+    <link>https://m1dsolo.github.io/tags/wol/</link>
+    <description>Recent content in WoL on m1dsolo&#39;s blog</description>
+    <image>
+      <title>m1dsolo&#39;s blog</title>
+      <url>https://m1dsolo.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
+      <link>https://m1dsolo.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
+    </image>
+    <generator>Hugo</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Mon, 09 Mar 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://m1dsolo.github.io/tags/wol/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>局域网 WoL 远程开机配置指南</title>
+      <link>https://m1dsolo.github.io/posts/wol/</link>
+      <pubDate>Mon, 09 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://m1dsolo.github.io/posts/wol/</guid>
+      <description>&lt;h2 id=&#34;1-前言&#34;&gt;1. 前言&lt;/h2&gt;
+&lt;p&gt;Wake-on-LAN（简称 WoL）是一种通过网络信号远程唤醒计算机的技术。&lt;/p&gt;
+&lt;p&gt;实现效果：笔记本和台式机在同一局域网下，台式机连接网线，笔记本可以把台式机开机。&lt;/p&gt;
+&lt;p&gt;本文记录在 Arch Linux 上配置 WoL 的完整流程，主板为技嘉 B650M AORUS。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;2-主板-bios-配置&#34;&gt;2. 主板 BIOS 配置&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;主板型号：&lt;/strong&gt; 技嘉 B650M AORUS（BIOS 版本 F33b）&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;BIOS 设置：&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;开机按 &lt;strong&gt;Del&lt;/strong&gt; 进入 BIOS&lt;/li&gt;
+&lt;li&gt;进入 &lt;code&gt;Settings → IO Ports&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;配置以下选项：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;选项&lt;/th&gt;
+          &lt;th&gt;设置&lt;/th&gt;
+          &lt;th&gt;说明&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;code&gt;ErP Support&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;strong&gt;Disabled&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;必须关闭，否则关机后网卡断电&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;code&gt;Network Stack&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;strong&gt;Enabled&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;启用网络栈&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;按 &lt;strong&gt;F10&lt;/strong&gt; 保存并退出&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;注意：&lt;/strong&gt; &lt;code&gt;ErP&lt;/code&gt; 是欧盟节能标准，开启后关机时主板会完全断电，导致 WoL 失效。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;3-获取网卡信息&#34;&gt;3. 获取网卡信息&lt;/h2&gt;
+&lt;p&gt;进入台式机 Arch Linux，执行：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ip addr
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;输出示例：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;2: enp12s0: &amp;lt;BROADCAST,MULTICAST,UP,LOWER_UP&amp;gt; mtu &lt;span class=&#34;m&#34;&gt;1500&lt;/span&gt; qdisc fq_codel state UP group default qlen &lt;span class=&#34;m&#34;&gt;1000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    link/ether 10:ff:e0:ce:62:08 brd ff:ff:ff:ff:ff:ff
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    altname enx10ffe0ce6208
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    inet 192.168.1.10/24 brd 192.168.1.255 scope global dynamic noprefixroute enp12s0
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;记录两个关键信息：&lt;/strong&gt;&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
